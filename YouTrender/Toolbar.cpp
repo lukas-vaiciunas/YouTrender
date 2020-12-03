@@ -33,18 +33,26 @@ Toolbar::~Toolbar()
 
 void Toolbar::remove(size_t index)
 {
-	//need to reset existing button positions upon removal
-
 	items_.erase(items_.cbegin() + index);
 
 	delete itemButtons_[index];
 	itemButtons_[index] = nullptr;
 	itemButtons_.erase(itemButtons_.cbegin() + index);
+
+	for (size_t i = index; i < itemButtons_.size(); i++)
+	{
+		float offset = 8.0f;
+		float size = 32.0f;
+		float dX = Collideable::aabb_.left + (size + offset) * i;
+		float dY = Collideable::aabb_.top;
+
+		itemButtons_[i]->setPosition(dX, dY);
+	}		
 }
 
 void Toolbar::add(UI *item)
 {
-	float offset = 16.0f;
+	float offset = 8.0f;
 	float size = 32.0f;
 	float dX = Collideable::aabb_.left + (size + offset) * items_.size();
 	float dY = Collideable::aabb_.top;
