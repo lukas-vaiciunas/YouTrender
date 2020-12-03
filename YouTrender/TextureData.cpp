@@ -14,10 +14,10 @@ TextureData::TextureData()
 	textures_.emplace(0, closeButton.getTexture());
 
 	sf::RenderTexture minimizeButton;
-	closeButton.create(static_cast<unsigned int>(Global::BAR_HEIGHT),
+	minimizeButton.create(static_cast<unsigned int>(Global::BAR_HEIGHT),
 		static_cast<unsigned int>(Global::BAR_HEIGHT));
-	closeButton.clear(sf::Color(0, 0, 0, 255));
-	closeButton.display();
+	minimizeButton.clear(sf::Color(255, 255, 0, 255));
+	minimizeButton.display();
 
 	textures_.emplace(1, minimizeButton.getTexture());
 
