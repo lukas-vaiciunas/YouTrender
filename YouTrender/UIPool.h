@@ -4,15 +4,23 @@
 #include <queue>
 #include "UI.h"
 #include "Toolbar.h"
+#include "Overlay.h"
 
 class UIPool
 {
 private:
-	static unsigned int nextUID_;
-	static std::queue<unsigned int> availableUIDs_;
+	
 	static std::unordered_map<unsigned int, UI *> UIs_;
-	static std::deque<unsigned int> order_;
 	static bool flagCleanup_;
+
+	static std::unordered_map<uint8_t, Overlay *> overlays_;
+	static bool isOverlayOn_;
+	static uint8_t overlayId_;
+
+	static std::deque<unsigned int> order_;
+
+	static std::queue<unsigned int> availableUIDs_;
+	static unsigned int nextUID_;
 
 	Toolbar toolbar_;
 
@@ -21,6 +29,11 @@ private:
 	void removeAt(size_t orderIndex);
 	void moveToToolbar(size_t orderIndex);
 public:
+	enum OVERLAY_ID : uint8_t
+	{
+		LOADING
+	};
+
 	UIPool();
 	~UIPool();
 
@@ -33,6 +46,8 @@ public:
 
 	static void add(UI *newUI);
 
+	static void toggleOverlay(OVERLAY_ID overlayId);
+	static void removeOverlay();
 	static void flagCleanup();
 	static void remove(unsigned int uID);
 	static void prioritize(unsigned int uID);

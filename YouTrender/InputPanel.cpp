@@ -11,17 +11,18 @@
 #include "Widget.h"
 #include "ListBoxSingle.h"
 #include "ListBoxMultiple.h"
+#include "Timer.h"
+#include <iostream> //
 
-InputPanel::InputPanel
-(
+InputPanel::InputPanel(
 	float x, float y,
 	const std::string &titleStr,
 	const std::vector<std::pair<std::string, std::vector<std::string>>> &options,
-	const sf::Color &defaultColor, const sf::Color &selectedColor
-) :
-	Collideable(x, y, 0.0f, 0.0f),
-	title_(),
-	analyzeButton_(0.0f, 0.0f, 96.0f, 32.0f, "Analyze", 16U, defaultColor, sf::Color())
+	const sf::Color &defaultColor, const sf::Color &selectedColor) :
+		Collideable(x, y, 0.0f, 0.0f),
+		Listener({ Event::EVENT::LOAD }),
+		title_(),
+		analyzeButton_(0.0f, 0.0f, 96.0f, 32.0f, "Analyze", 16U, defaultColor, sf::Color())
 {
 	constexpr float gapX = 16.0f;
 	constexpr float gapY = 32.0f;
@@ -96,6 +97,143 @@ InputPanel::~InputPanel()
 	}
 }
 
+void InputPanel::onEvent(Event::EVENT ev)
+{
+	if (ev == Event::EVENT::LOAD)
+	{
+		if (!dataQ_.empty())
+		{
+			this->loadData(dataQ_.front());
+			dataQ_.pop();
+
+			if (dataQ_.empty())
+				UIPool::removeOverlay();
+		}
+	}
+}
+
+void InputPanel::loadData(ChoiceSet &choiceSet)
+{
+	Timer timer;
+	DataMod<unsigned int, unsigned int> dataMod;
+	Loader loader;
+	std::vector<std::pair<unsigned int, unsigned int>> rawData;
+	std::vector<std::pair<std::string, unsigned int>> readyData;
+	std::vector<std::string> dataInputs;
+	std::string widgetTitle = "";
+
+	VideoData::CATEGORY independent = VideoData::CATEGORY::CATEGORY_ID;
+	VideoData::CATEGORY dependent = VideoData::CATEGORY::NUM_VIEWS;
+
+	std::unordered_set<size_t> &locationChoices = choiceSet.locationChoices();
+
+	while (!locationChoices.empty())
+	{
+		auto firstIt = choiceSet.locationChoices().cbegin();
+
+		dataInputs.push_back(VideoData::locationIdMap().at(*firstIt));
+		locationChoices.erase(firstIt);
+	}
+
+	switch (choiceSet.independentChoice())
+	{
+	case 0:
+		independent = VideoData::CATEGORY::CATEGORY_ID;
+		widgetTitle.append("Category");
+		break;
+	}
+
+	widgetTitle.append(" vs ");
+
+	switch (choiceSet.dependentChoice())
+	{
+	case 0:
+		dependent = VideoData::CATEGORY::NUM_VIEWS;
+		widgetTitle.append("Views");
+		break;
+	case 1:
+		dependent = VideoData::CATEGORY::NUM_LIKES;
+		widgetTitle.append("Likes");
+		break;
+	case 2:
+		dependent = VideoData::CATEGORY::NUM_DISLIKES;
+		widgetTitle.append("Dislikes");
+		break;
+	case 3:
+		dependent = VideoData::CATEGORY::NUM_COMMENTS;
+		widgetTitle.append("Comments");
+		break;
+	}
+
+	widgetTitle.append(" in ");
+
+	timer.start();
+
+	switch (choiceSet.methodChoice())
+	{
+	case 0:
+	{
+		typedef std::unordered_map<unsigned int, unsigned int> DataType;
+
+		DataType loadedData;
+		std::string filePath = "";
+
+		for (const std::string &location : dataInputs)
+		{
+			widgetTitle.append(location + ", ");
+			filePath = "data/" + location + "videos.csv";
+			loader.loadCountPairs<DataType>(
+				loadedData, filePath.c_str(), independent, dependent);
+		}
+
+		rawData = dataMod.getLargest(loadedData, 5);
+		break;
+	}
+	case 1:
+	{
+		typedef typename std::map<unsigned int, unsigned int> DataType;
+
+		DataType loadedData;
+		std::string filePath = "";
+
+		for (const std::string &location : dataInputs)
+		{
+			widgetTitle.append(location + ", ");
+			filePath = "data/" + location + "videos.csv";
+			loader.loadCountPairs<DataType>(
+				loadedData, filePath.c_str(), independent, dependent);
+		}
+
+		rawData = dataMod.getLargest(loadedData, 5);
+		break;
+	}
+	}
+
+	timer.stop();
+
+	std::cout << "Time: " << timer.getMilliseconds().count() / 1000.0f << "s" << std::endl;
+
+	widgetTitle.erase(widgetTitle.length() - 2);
+
+	switch (independent)
+	{
+	case VideoData::CATEGORY::CATEGORY_ID:
+		readyData = dataMod.categoryIdKeysToStrings(rawData);
+		break;
+	}
+
+	unsigned int chartWidth = Global::SCREEN_WIDTH / 2;
+	unsigned int chartHeight = Global::SCREEN_HEIGHT / 2;
+	float dX = Global::SCREEN_WIDTH / 2.0f - chartWidth / 2.0f;
+	float dY = Global::SCREEN_HEIGHT / 2.0f - chartHeight / 2.0f;
+
+	BarChart *chart = new BarChart(chartWidth, chartHeight, readyData);
+	Widget *widget = new Widget(dX, dY, widgetTitle, chart);
+	UIPool::add(widget);
+
+	UIPool::removeOverlay();
+}
+
 void InputPanel::updateOnMousePress()
 {
 	Mouse &mouse = *Mouse::getInstance();
@@ -123,14 +261,6 @@ void InputPanel::updateOnMousePress()
 		if (allSelected &&
 			analyzeButton_.isClicked())
 		{
-			//analyze
-			DataMod<unsigned int, unsigned int> dataMod;
-			Loader loader;
-			std::vector<std::pair<unsigned int, unsigned int>> rawData;
-			std::vector<std::pair<std::string, unsigned int>> readyData;
-			std::vector<std::string> dataInputs;
-			std::string widgetTitle = "";
-
 			VideoData::CATEGORY independent = VideoData::CATEGORY::CATEGORY_ID;
 			VideoData::CATEGORY dependent = VideoData::CATEGORY::NUM_VIEWS;
 
@@ -146,106 +276,23 @@ void InputPanel::updateOnMousePress()
 			int methodChoice =
 				static_cast<ListBoxSingle *>(listBoxes_[3])->selectedIndex();
 
-			while (!locationChoices.empty())
-			{
-				auto firstIt = locationChoices.cbegin();
-
-				dataInputs.push_back(VideoData::locationIdMap().at(*firstIt));
-				locationChoices.erase(firstIt);
-			}
-
-			switch (independentChoice)
-			{
-			case 0:
-				independent = VideoData::CATEGORY::CATEGORY_ID;
-				widgetTitle.append("Category");
-				break;
-			}
-
-			widgetTitle.append(" vs ");
-
-			switch (dependentChoice)
-			{
-			case 0:
-				dependent = VideoData::CATEGORY::NUM_VIEWS;
-				widgetTitle.append("Views");
-				break;
-			case 1:
-				dependent = VideoData::CATEGORY::NUM_LIKES;
-				widgetTitle.append("Likes");
-				break;
-			case 2:
-				dependent = VideoData::CATEGORY::NUM_DISLIKES;
-				widgetTitle.append("Dislikes");
-				break;
-			case 3:
-				dependent = VideoData::CATEGORY::NUM_COMMENTS;
-				widgetTitle.append("Comments");
-				break;
-			}
-
-			widgetTitle.append(" in ");
-
-			switch (methodChoice)
-			{
-			case 0:
-			{
-				typedef std::unordered_map<unsigned int, unsigned int> DataType;
-				
-				DataType loadedData;
-				std::string filePath = "";
-				
-				for (const std::string &location : dataInputs)
-				{
-					widgetTitle.append(location + ", ");
-					filePath = "data/" + location + "videos.csv";
-					loader.loadCountPairs<DataType>(
-						loadedData, filePath.c_str(), independent, dependent);
-				}
-
-				rawData = dataMod.getLargest(loadedData, 5);
-				break;
-			}
-			case 1:
-			{
-				typedef typename std::map<unsigned int, unsigned int> DataType;
-				
-				DataType loadedData;
-				std::string filePath = "";
-
-				for (const std::string &location : dataInputs)
-				{
-					widgetTitle.append(location + ", ");
-					filePath = "data/" + location + "videos.csv";
-					loader.loadCountPairs<DataType>(
-						loadedData, filePath.c_str(), independent, dependent);
-				}
-
-				rawData = dataMod.getLargest(loadedData, 5);
-				break;
-			}
-			}
-
-			widgetTitle.erase(widgetTitle.length() - 2);
-
-			switch (independent)
-			{
-			case VideoData::CATEGORY::CATEGORY_ID:
-				readyData = dataMod.categoryIdKeysToStrings(rawData);
-				break;
-			}
-
-			unsigned int chartWidth = Global::SCREEN_WIDTH / 2;
-			unsigned int chartHeight = Global::SCREEN_HEIGHT / 2;
-			float dX = Global::SCREEN_WIDTH / 2.0f - chartWidth / 2.0f;
-			float dY = Global::SCREEN_HEIGHT / 2.0f - chartHeight / 2.0f;
-			
-			BarChart *chart = new BarChart(chartWidth, chartHeight, readyData);
-			Widget *widget = new Widget(dX, dY, widgetTitle, chart);
-			UIPool::add(widget);
+			UIPool::toggleOverlay(UIPool::OVERLAY_ID::LOADING);
+			dataQ_.push(ChoiceSet(locationChoices, independentChoice, dependentChoice, methodChoice));
 		}
 	}
 }
+
+/*void InputPanel::updateOnTick()
+{
+	if (!dataQ_.empty())
+	{
+		this->loadData(dataQ_.front());
+		dataQ_.pop();
+
+		if(dataQ_.empty())
+			UIPool::removeOverlay();
+	}
+}*/
 
 void InputPanel::render(sf::RenderWindow &window) const
 {

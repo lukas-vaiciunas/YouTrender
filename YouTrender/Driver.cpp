@@ -2,6 +2,7 @@
 #include "Widget.h"
 #include "RandColorVisual.h"
 #include "TextureData.h"
+#include "EventQueue.h"
 #include "Constants.h"
 
 Driver::Driver() :
@@ -80,7 +81,7 @@ void Driver::switchState(STATE target)
 			"Data Analysis Setup",
 			{
 			std::make_pair<std::string, std::vector<std::string>>(
-				"Location",
+				"Location(s)",
 				{
 					"US",
 					"CA",
@@ -193,6 +194,8 @@ void Driver::IntroFunctions::render(const Driver &driver, sf::RenderWindow &wind
 void Driver::MainFunctions::updateOnTick(Driver &driver)
 {
 	driver.uiPool_->updateCleanup();
+	EventQueue::getInstance()->dispatch();
+	//driver.inputPanel_->updateOnTick();
 }
 
 void Driver::MainFunctions::updateOnMousePress(Driver &driver)

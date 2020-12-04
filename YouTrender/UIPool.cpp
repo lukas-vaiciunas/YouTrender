@@ -1,10 +1,20 @@
 #include "UIPool.h"
+#include "EventQueue.h"
 
-unsigned int UIPool::nextUID_ = 0;
-std::queue<unsigned int> UIPool::availableUIDs_;
 std::unordered_map<unsigned int, UI *> UIPool::UIs_;
-std::deque<unsigned int> UIPool::order_;
 bool UIPool::flagCleanup_ = false;
+
+std::unordered_map<uint8_t, Overlay *> UIPool::overlays_ = std::unordered_map<uint8_t, Overlay *>
+{
+	{ UIPool::OVERLAY_ID::LOADING, new Overlay("Loading...", 32, sf::Color(255, 255, 255, 255), sf::Color(0, 0, 0, 125)) }
+};
+bool UIPool::isOverlayOn_ = false;
+uint8_t UIPool::overlayId_ = UIPool::OVERLAY_ID::LOADING;
+
+std::deque<unsigned int> UIPool::order_;
+
+std::queue<unsigned int> UIPool::availableUIDs_;
+unsigned int UIPool::nextUID_ = 0;
 
 UIPool::UIPool() :
 	toolbar_(32.0f)
@@ -13,6 +23,12 @@ UIPool::UIPool() :
 UIPool::~UIPool()
 {
 	for(auto it = UIs_.begin(); it != UIs_.end(); it++)
+	{
+		delete it->second;
+		it->second = nullptr;
+	}
+
+	for (auto it = overlays_.begin(); it != overlays_.end(); it++)
 	{
 		delete it->second;
 		it->second = nullptr;
@@ -89,6 +105,34 @@ void UIPool::render(sf::RenderWindow &window) const
 
 	for (size_t i = order_.size(); i-- > 0;)
 		UIs_[order_[i]]->render(window);
+
+	if (isOverlayOn_)
+	{
+		overlays_[overlayId_]->render(window);
+
+		if (overlayId_ == OVERLAY_ID::LOADING)
+			EventQueue::getInstance()->send(Event::EVENT::LOAD);
+	}
+}
+
+void UIPool::toggleOverlay(OVERLAY_ID overlayId)
+{
+	if (!isOverlayOn_)
+	{
+		isOverlayOn_ = true;
+		overlayId_ = overlayId;
+	}
+	else
+	{
+		if (overlayId_ == overlayId)
+			isOverlayOn_ = false;
+		else overlayId_ = overlayId;
+	}
+}
+
+void UIPool::removeOverlay()
+{
+	isOverlayOn_ = false;
 }
 
 void UIPool::flagCleanup()
