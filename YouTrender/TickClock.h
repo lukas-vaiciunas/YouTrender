@@ -1,12 +1,12 @@
 #pragma once
 
-class Timer
+class TickClock
 {
 private:
 	unsigned int ticks_;
 	unsigned int target_;
 public:
-	Timer(float secs);
+	TickClock(float secs);
 
 	bool tick();
 };

@@ -1,7 +1,7 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
-#include "Timer.h"
+#include "TickClock.h"
 
 class IntroMovie
 {
@@ -16,7 +16,7 @@ private:
 	sf::Text skipText_;
 
 	STATE state_;
-	Timer showTimer_;
+	TickClock showClock_;
 
 	unsigned char alpha_;
 	unsigned char deltaAlpha_;

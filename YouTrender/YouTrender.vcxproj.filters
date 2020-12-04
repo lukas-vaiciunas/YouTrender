@@ -155,9 +155,6 @@
     <ClInclude Include="IntroMovie.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Timer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="ListBox.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -183,6 +180,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Toolbar.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TickClock.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -6,7 +6,7 @@ IntroMovie::IntroMovie(float showSecs, unsigned char deltaAlpha, const sf::Textu
 	img_(imgTexture),
 	skipText_("[Press Any Key to Skip]", FontData::getInstance()->getMainFont(), 20U),
 	state_(STATE::SHOW),
-	showTimer_(showSecs),
+	showClock_(showSecs),
 	alpha_(255),
 	deltaAlpha_(deltaAlpha),
 	done_(false)
@@ -30,7 +30,7 @@ void IntroMovie::updateOnTick()
 	switch (state_)
 	{
 	case STATE::SHOW:
-		if (showTimer_.tick())
+		if (showClock_.tick())
 			state_ = STATE::FADE;
 		break;
 	case STATE::FADE:

@@ -1,12 +1,12 @@
-#include "Timer.h"
+#include "TickClock.h"
 #include "Constants.h"
 
-Timer::Timer(float secs) :
+TickClock::TickClock(float secs) :
 	ticks_(0),
 	target_(static_cast<unsigned int>(secs * Global::FPS_CAP))
 {}
 
-bool Timer::tick()
+bool TickClock::tick()
 {
 	if (++ticks_ > target_)
 	{

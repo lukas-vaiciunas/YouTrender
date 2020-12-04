@@ -192,7 +192,7 @@
     <ClInclude Include="PrimitiveButton.h" />
     <ClInclude Include="RandColorVisual.h" />
     <ClInclude Include="TextureData.h" />
-    <ClInclude Include="Timer.h" />
+    <ClInclude Include="TickClock.h" />
     <ClInclude Include="Toolbar.h" />
     <ClInclude Include="UI.h" />
     <ClInclude Include="UIPool.h" />
