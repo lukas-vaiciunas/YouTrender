@@ -10,7 +10,7 @@ EventQueue::~EventQueue()
 
 EventQueue *EventQueue::getInstance()
 {
-	if (instance_ == nullptr)
+	if (!instance_)
 		instance_ = new EventQueue();
 
 	return instance_;

@@ -12,6 +12,7 @@
 #include "ListBoxSingle.h"
 #include "ListBoxMultiple.h"
 #include "Timer.h"
+#include "Log.h"
 #include <iostream> //
 
 InputPanel::InputPanel(
@@ -211,7 +212,9 @@ void InputPanel::loadData(ChoiceSet &choiceSet)
 
 	timer.stop();
 
-	std::cout << "Time: " << timer.getMilliseconds().count() / 1000.0f << "s" << std::endl;
+	//std::cout << "Time: " << timer.getMilliseconds().count() / 1000.0f << "s" << std::endl;
+	std::string logTxt = "Time: " + std::to_string(timer.getMilliseconds().count() / 1000.0f) + "s";
+	Log::getInstance()->push(logTxt);
 
 	widgetTitle.erase(widgetTitle.length() - 2);
 

@@ -158,6 +158,7 @@
     <ClCompile Include="ListBoxSingle.cpp" />
     <ClCompile Include="Listener.cpp" />
     <ClCompile Include="Loader.cpp" />
+    <ClCompile Include="Log.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Mouse.cpp" />
     <ClCompile Include="Overlay.cpp" />
@@ -194,6 +195,7 @@
     <ClInclude Include="ListBoxSingle.h" />
     <ClInclude Include="Listener.h" />
     <ClInclude Include="Loader.h" />
+    <ClInclude Include="Log.h" />
     <ClInclude Include="Mouse.h" />
     <ClInclude Include="NumMod.h" />
     <ClInclude Include="Overlay.h" />

@@ -3,6 +3,7 @@
 #include "RandColorVisual.h"
 #include "TextureData.h"
 #include "EventQueue.h"
+#include "Log.h"
 #include "Constants.h"
 
 Driver::Driver() :
@@ -225,5 +226,6 @@ void Driver::MainFunctions::updateOnKeyPress(Driver &driver, const sf::Event &ev
 void Driver::MainFunctions::render(const Driver &driver, sf::RenderWindow &window) const
 {
 	driver.inputPanel_->render(window);
+	Log::getInstance()->render(window);
 	driver.uiPool_->render(window);
 }
