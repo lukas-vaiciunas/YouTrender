@@ -187,6 +187,8 @@ void InputPanel::loadData(ChoiceSet &choiceSet)
 				loadedData, filePath.c_str(), independent, dependent);
 		}
 
+		widgetTitle.append("using Hash Table");
+
 		rawData = dataMod.getLargest(loadedData, 5);
 		break;
 	}
@@ -205,6 +207,8 @@ void InputPanel::loadData(ChoiceSet &choiceSet)
 				loadedData, filePath.c_str(), independent, dependent);
 		}
 
+		widgetTitle.append("using BST");
+
 		rawData = dataMod.getLargest(loadedData, 5);
 		break;
 	}
@@ -215,8 +219,6 @@ void InputPanel::loadData(ChoiceSet &choiceSet)
 	//std::cout << "Time: " << timer.getMilliseconds().count() / 1000.0f << "s" << std::endl;
 	std::string logTxt = "Time: " + std::to_string(timer.getMilliseconds().count() / 1000.0f) + "s";
 	Log::getInstance()->push(logTxt);
-
-	widgetTitle.erase(widgetTitle.length() - 2);
 
 	switch (independent)
 	{
