@@ -161,7 +161,7 @@
     <ClCompile Include="PrimitiveButton.cpp" />
     <ClCompile Include="RandColorVisual.cpp" />
     <ClCompile Include="TextureData.cpp" />
-    <ClCompile Include="Timer.cpp" />
+    <ClCompile Include="TickClock.cpp" />
     <ClCompile Include="Toolbar.cpp" />
     <ClCompile Include="UI.cpp" />
     <ClCompile Include="UIPool.cpp" />
