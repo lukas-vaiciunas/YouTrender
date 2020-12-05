@@ -18,16 +18,19 @@ private:
 		std::unordered_set<size_t> locationChoices_;
 		int independentChoice_;
 		int dependentChoice_;
+		int rankingChoice_;
 		int methodChoice_;
 	public:
 		ChoiceSet(
 			const std::unordered_set<size_t> &locationChoices,
 			int independentChoice,
 			int dependentChoice,
+			int rankingChoice,
 			int methodChoice) :
 				locationChoices_(locationChoices),
 				independentChoice_(independentChoice),
 				dependentChoice_(dependentChoice),
+				rankingChoice_(rankingChoice),
 				methodChoice_(methodChoice)
 		{}
 
@@ -46,6 +49,10 @@ private:
 		int dependentChoice() const
 		{
 			return dependentChoice_;
+		}
+		int rankingChoice() const
+		{
+			return rankingChoice_;
 		}
 		int methodChoice() const
 		{

@@ -121,6 +121,7 @@ void InputPanel::loadData(ChoiceSet &choiceSet)
 	std::vector<std::pair<unsigned int, unsigned int>> rawData;
 	std::vector<std::pair<std::string, unsigned int>> readyData;
 	std::vector<std::string> dataInputs;
+	unsigned int ranking = 5;
 	std::string widgetTitle = "";
 
 	VideoData::CATEGORY independent = VideoData::CATEGORY::CATEGORY_ID;
@@ -166,6 +167,16 @@ void InputPanel::loadData(ChoiceSet &choiceSet)
 		break;
 	}
 
+	switch (choiceSet.rankingChoice())
+	{
+	case 0:
+		ranking = 5;
+		break;
+	case 1:
+		ranking = 10;
+		break;
+	}
+
 	widgetTitle.append(" in ");
 
 	timer.start();
@@ -187,9 +198,9 @@ void InputPanel::loadData(ChoiceSet &choiceSet)
 				loadedData, filePath.c_str(), independent, dependent);
 		}
 
-		widgetTitle.append("using Hash Table");
+		widgetTitle.append("using Hash Table (Top " + std::to_string(ranking) + ")");
 
-		rawData = dataMod.getLargest(loadedData, 5);
+		rawData = dataMod.getLargest(loadedData, ranking);
 		break;
 	}
 	case 1:
@@ -207,9 +218,9 @@ void InputPanel::loadData(ChoiceSet &choiceSet)
 				loadedData, filePath.c_str(), independent, dependent);
 		}
 
-		widgetTitle.append("using BST");
+		widgetTitle.append("using BST (Top " + std::to_string(ranking) + ")");
 
-		rawData = dataMod.getLargest(loadedData, 5);
+		rawData = dataMod.getLargest(loadedData, ranking);
 		break;
 	}
 	}
@@ -278,11 +289,14 @@ void InputPanel::updateOnMousePress()
 			int dependentChoice =
 				static_cast<ListBoxSingle *>(listBoxes_[2])->selectedIndex();
 
-			int methodChoice =
+			int rankingChoice =
 				static_cast<ListBoxSingle *>(listBoxes_[3])->selectedIndex();
 
+			int methodChoice =
+				static_cast<ListBoxSingle *>(listBoxes_[4])->selectedIndex();
+
 			UIPool::toggleOverlay(UIPool::OVERLAY_ID::LOADING);
-			dataQ_.push(ChoiceSet(locationChoices, independentChoice, dependentChoice, methodChoice));
+			dataQ_.push(ChoiceSet(locationChoices, independentChoice, dependentChoice, rankingChoice, methodChoice));
 		}
 	}
 }

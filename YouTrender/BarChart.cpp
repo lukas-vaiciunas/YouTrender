@@ -29,6 +29,17 @@ BarChart::BarChart(unsigned int width, unsigned int height, const std::vector<st
 	this->updateOutput(data);
 }
 
+std::string BarChart::newlineify(const std::string &str)
+{
+	std::string newStr = "";
+	newStr.push_back(str.front());
+
+	for (size_t i = 1; i < str.length(); i++)
+		newStr.push_back(str[i - 1] == '&' ? '\n' : str[i]);
+
+	return newStr;
+}
+
 void BarChart::updateOutput(const std::vector<std::pair<std::string, unsigned int>> &data)
 {
 	if (data.size() > unusedColors_.size())
@@ -46,7 +57,6 @@ void BarChart::updateOutput(const std::vector<std::pair<std::string, unsigned in
 	sf::RectangleShape horizontalAxis;
 	NumMod<uint64_t> numMod;
 
-	unsigned int txtSize = 12U;
 	float minBarX = 96.0f;
 	float minBarY = 32.0f;
 	float maxBarHeight = height_ - minBarY * 2.0f;
@@ -54,6 +64,11 @@ void BarChart::updateOutput(const std::vector<std::pair<std::string, unsigned in
 	float spacing = barWidth * 2.5f;
 	unsigned int numDependentTicks = 5;
 	float dependentSpacing = maxBarHeight / numDependentTicks;
+
+	unsigned int maxTxtSize = 12U;
+	unsigned int txtSize = static_cast<unsigned int>(barWidth + spacing) / 6U;
+	if (txtSize > maxTxtSize)
+		txtSize = maxTxtSize;
 
 	uint64_t maxVal = 0;
 	uint64_t maxDependent = 0;
@@ -92,7 +107,8 @@ void BarChart::updateOutput(const std::vector<std::pair<std::string, unsigned in
 		amtTxts[i].setPosition(std::floorf(dX + barWidth / 2.0f), std::floorf(dY - txtSize));
 		amtTxts[i].setFillColor(accentColor);
 	
-		independentTxts.push_back(sf::Text(data[i].first, FontData::getInstance()->getMainFont(), txtSize));
+		std::string nextIndependentTxt = this->newlineify(data[i].first);
+		independentTxts.push_back(sf::Text(nextIndependentTxt, FontData::getInstance()->getMainFont(), txtSize));
 		independentTxts[i].setOrigin(std::floorf(independentTxts[i].getLocalBounds().width / 2.0f), std::floorf(independentTxts[i].getLocalBounds().height / 2.0f));
 		independentTxts[i].setPosition(std::floorf(dX + barWidth / 2.0f), std::floorf(dY + barHeight + minBarY / 2.0f));
 		independentTxts[i].setFillColor(accentColor);
@@ -104,8 +120,8 @@ void BarChart::updateOutput(const std::vector<std::pair<std::string, unsigned in
 	{
 		float dY = std::floorf((maxBarHeight + minBarY) - dependentSpacing * i);
 
-		dependentTxts.push_back(sf::Text(numMod.toShorthand(deltaDependent * i), FontData::getInstance()->getMainFont(), txtSize));
-		dependentTxts[i].setOrigin(std::floorf(dependentTxts[i].getLocalBounds().width), std::floorf(txtSize / 2.0f + 1.0f));
+		dependentTxts.push_back(sf::Text(numMod.toShorthand(deltaDependent * i), FontData::getInstance()->getMainFont(), maxTxtSize));
+		dependentTxts[i].setOrigin(std::floorf(dependentTxts[i].getLocalBounds().width), std::floorf(maxTxtSize / 2.0f + 1.0f));
 		dependentTxts[i].setPosition(std::floorf(minBarX / 2.5f), dY);
 		dependentTxts[i].setFillColor(accentColor);
 

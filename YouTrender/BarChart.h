@@ -11,6 +11,7 @@ private:
 
 	std::queue<size_t> unusedColors_;
 
+	std::string newlineify(const std::string &str);
 	void updateOutput(const std::vector<std::pair<std::string, unsigned int>> &data);
 public:
 	BarChart(unsigned int width, unsigned int height, const std::vector<std::pair<std::string, unsigned int>> &data);

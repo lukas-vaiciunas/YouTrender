@@ -115,9 +115,7 @@ void Driver::switchState(STATE target)
 				"Top",
 				{
 					"5",
-					"10",
-					"15",
-					"20"
+					"10"
 				}),
 			std::make_pair<std::string, std::vector<std::string>>(
 				"Analysis Method",
