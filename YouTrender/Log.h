@@ -2,9 +2,9 @@
 
 #include <deque>
 #include <string>
-#include "SFML/Graphics.hpp"
+#include "Visual.h"
 
-class Log
+class Log : public Visual
 {
 private:
 	static constexpr unsigned int FONT_SIZE_ = 12U;
@@ -12,9 +12,6 @@ private:
 	static Log *instance_;
 
 	std::deque<std::string> data_;
-
-	sf::RenderTexture tex_;
-	sf::Sprite vis_;
 
 	Log();
 	~Log();
@@ -26,9 +23,5 @@ public:
 
 	static Log *getInstance();
 
-	void render(sf::RenderWindow &window) const;
-
 	void push(const std::string &text);
-
-	void setPosition(float x, float y);
 };

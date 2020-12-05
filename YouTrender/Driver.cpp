@@ -76,6 +76,9 @@ void Driver::switchState(STATE target)
 	case STATE::MAIN:
 		loader_ = new Loader();
 		uiPool_ = new UIPool();
+		uiPool_->add(new Widget(Global::SCREEN_WIDTH * 3.0f / 4.0f, 0.0f,
+			"Log",
+			Log::getInstance()));
 		inputPanel_ = new InputPanel(
 			Global::SCREEN_WIDTH / 16.0f,
 			Global::SCREEN_HEIGHT / 16.0f,
@@ -107,6 +110,14 @@ void Driver::switchState(STATE target)
 					"Likes",
 					"Dislikes",
 					"Comments"
+				}),
+			std::make_pair<std::string, std::vector<std::string>>(
+				"Top",
+				{
+					"5",
+					"10",
+					"15",
+					"20"
 				}),
 			std::make_pair<std::string, std::vector<std::string>>(
 				"Analysis Method",
@@ -194,7 +205,7 @@ void Driver::IntroFunctions::render(const Driver &driver, sf::RenderWindow &wind
 
 void Driver::MainFunctions::updateOnTick(Driver &driver)
 {
-	driver.uiPool_->updateCleanup();
+	driver.uiPool_->updateCleanup(); //remove this and update cleanup automatically inside uiPool when it gets event
 	EventQueue::getInstance()->dispatch();
 	//driver.inputPanel_->updateOnTick();
 }
@@ -226,6 +237,6 @@ void Driver::MainFunctions::updateOnKeyPress(Driver &driver, const sf::Event &ev
 void Driver::MainFunctions::render(const Driver &driver, sf::RenderWindow &window) const
 {
 	driver.inputPanel_->render(window);
-	Log::getInstance()->render(window);
+	//Log::getInstance()->render(window);
 	driver.uiPool_->render(window);
 }

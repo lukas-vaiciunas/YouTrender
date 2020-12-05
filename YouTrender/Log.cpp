@@ -5,13 +5,9 @@
 Log *Log::instance_ = nullptr;
 
 Log::Log() :
-	tex_(),
-	vis_(tex_.getTexture())
+	Visual(Global::SCREEN_WIDTH / 4, Global::SCREEN_HEIGHT / 2)
 {
-	tex_.create(Global::SCREEN_WIDTH / 4, Global::SCREEN_HEIGHT / 2);
-	vis_ = sf::Sprite(tex_.getTexture());
 	this->updateVis();
-	this->setPosition(Global::SCREEN_WIDTH * 3.0f / 4.0f, 0.0f);
 }
 
 Log::~Log()
@@ -22,41 +18,27 @@ Log::~Log()
 
 void Log::updateVis()
 {
-	sf::Color backgroundColor(255, 255, 255, 125);
-	sf::Color textColor(0, 0, 0, 255);
-	sf::RectangleShape outline;
+	sf::Color backgroundColor(40, 40, 40, 255);
+	sf::Color textColor(255, 255, 255, 255);
 
-	unsigned int width = tex_.getSize().x;
 	unsigned int height = tex_.getSize().y;
 
-	float maxY = height - FONT_SIZE_ * 2.0f;
-
-	unsigned int lineCap = static_cast<unsigned int>(maxY) / FONT_SIZE_;
+	unsigned int lineCap = height / FONT_SIZE_;
 	unsigned int numLines = (lineCap > data_.size() ? data_.size() : lineCap);
 
-	std::vector<sf::Text> lines_;
+	std::vector<sf::Text> lines;
 
 	for (unsigned int i = 0; i < numLines; i++)
 	{
-		lines_.push_back(sf::Text(data_[i], FontData::getInstance()->getMainFont(), FONT_SIZE_));
-		lines_[i].setPosition(0.0f, maxY - FONT_SIZE_ * i);
-		lines_[i].setFillColor(textColor);
+		lines.push_back(sf::Text(data_[numLines - 1 - i], FontData::getInstance()->getMainFont(), FONT_SIZE_));
+		lines[i].setPosition(0.0f, std::floorf(static_cast<float>(FONT_SIZE_ * i)));
+		lines[i].setFillColor(textColor);
 	}
-
-	float outlineThickness = 1.0f;
-
-	outline.setFillColor(sf::Color(0, 0, 0, 0));
-	outline.setPosition(outlineThickness, outlineThickness);
-	outline.setSize(sf::Vector2f(width - outlineThickness * 2.0f, height - outlineThickness * 2.0f));
-	outline.setOutlineThickness(outlineThickness);
-	outline.setOutlineColor(sf::Color());
 
 	tex_.clear(backgroundColor);
 
-	for (const sf::Text &line : lines_)
+	for (const sf::Text &line : lines)
 		tex_.draw(line);
-
-	tex_.draw(outline);
 
 	tex_.display();
 }
@@ -69,19 +51,9 @@ Log *Log::getInstance()
 	return instance_;
 }
 
-void Log::render(sf::RenderWindow &window) const
-{
-	window.draw(vis_);
-}
-
 void Log::push(const std::string &text)
 {
 	data_.push_front(text);
 
 	this->updateVis();
-}
-
-void Log::setPosition(float x, float y)
-{
-	vis_.setPosition(x, y);
 }
