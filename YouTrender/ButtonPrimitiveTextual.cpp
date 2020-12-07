@@ -3,6 +3,7 @@
 
 ButtonPrimitiveTextual::ButtonPrimitiveTextual(float x, float y, float width, float height, const std::string &text, unsigned int textSize, const sf::Color &color, const sf::Color &textColor) :
 	PrimitiveButton(x, y, width, height, color),
+	Collideable(x, y, width, height),
 	txt_(text, FontData::getInstance()->getMainFont(), textSize)
 {
 	txt_.setOrigin(std::floorf(txt_.getLocalBounds().width / 2.0f), std::floorf(textSize / 2.0f));

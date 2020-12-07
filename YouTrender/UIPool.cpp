@@ -1,8 +1,13 @@
 #include "UIPool.h"
 #include "EventQueue.h"
+#include "Mouse.h"
 
-std::unordered_map<unsigned int, UI *> UIPool::UIs_;
+std::unordered_map<UIPool::Uid, UI *> UIPool::UIs_;
 bool UIPool::flagCleanup_ = false;
+
+std::unordered_map<UIPool::Uid, Tooltipped *> UIPool::tooltipped_;
+bool UIPool::isTooltipActive_ = false;
+UIPool::Uid UIPool::activeTooltipped_ = 0;
 
 std::unordered_map<uint8_t, Overlay *> UIPool::overlays_ = std::unordered_map<uint8_t, Overlay *>
 {
@@ -11,10 +16,10 @@ std::unordered_map<uint8_t, Overlay *> UIPool::overlays_ = std::unordered_map<ui
 bool UIPool::isOverlayOn_ = false;
 uint8_t UIPool::overlayId_ = UIPool::OVERLAY_ID::LOADING;
 
-std::deque<unsigned int> UIPool::order_;
+std::deque<UIPool::Uid> UIPool::order_;
 
-std::queue<unsigned int> UIPool::availableUIDs_;
-unsigned int UIPool::nextUID_ = 0;
+std::queue<UIPool::Uid> UIPool::availableUIDs_;
+UIPool::Uid UIPool::nextUID_ = 0;
 
 UIPool::UIPool() :
 	toolbar_(32.0f)
@@ -35,31 +40,31 @@ UIPool::~UIPool()
 	}
 }
 
-void UIPool::returnUID(unsigned int uID)
+void UIPool::returnUID(Uid uid)
 {
-	availableUIDs_.push(uID);
+	availableUIDs_.push(uid);
 }
 
 void UIPool::removeAt(size_t orderIndex)
 {
-	unsigned int uID = order_[orderIndex];
+	unsigned int uid = order_[orderIndex];
 
-	delete UIs_[uID];
-	UIs_[uID] = nullptr;
+	delete UIs_[uid];
+	UIs_[uid] = nullptr;
 
-	UIs_.erase(uID);
+	UIs_.erase(uid);
 	order_.erase(order_.cbegin() + orderIndex);
 
-	UIPool::returnUID(uID);
+	UIPool::returnUID(uid);
 }
 
 void UIPool::moveToToolbar(size_t orderIndex)
 {
-	unsigned int uID = order_[orderIndex];
+	unsigned int uid = order_[orderIndex];
 
-	toolbar_.add(UIs_.at(uID));
+	toolbar_.add(UIs_.at(uid));
 
-	UIs_.erase(uID);
+	UIs_.erase(uid);
 	order_.erase(order_.cbegin() + orderIndex);
 }
 
@@ -97,6 +102,28 @@ void UIPool::updateOnMouseAxes()
 {
 	for (auto it = order_.cbegin(); it != order_.cend(); it++)
 		UIs_[*it]->updateOnMouseAxes();
+
+	if (isTooltipActive_)
+	{
+		tooltip_.updateOnMouseAxes();
+
+		if (!Mouse::getInstance()->interactable() ||
+				!tooltipped_[activeTooltipped_]->isHovered())
+			isTooltipActive_ = false;
+	}
+	else if (Mouse::getInstance()->interactable())
+	{
+		for (auto it = tooltipped_.cbegin(); it != tooltipped_.cend(); it++)
+		{
+			if (it->second->isHovered())
+			{
+				isTooltipActive_ = true;
+				activeTooltipped_ = it->first;
+				tooltip_.activate(it->second->getTip());
+				break;
+			}
+		}
+	}	
 }
 
 void UIPool::render(sf::RenderWindow &window) const
@@ -106,6 +133,9 @@ void UIPool::render(sf::RenderWindow &window) const
 	for (size_t i = order_.size(); i-- > 0;)
 		UIs_[order_[i]]->render(window);
 
+	if (isTooltipActive_)
+		tooltip_.render(window);
+
 	if (isOverlayOn_)
 	{
 		overlays_[overlayId_]->render(window);
@@ -113,6 +143,73 @@ void UIPool::render(sf::RenderWindow &window) const
 		if (overlayId_ == OVERLAY_ID::LOADING)
 			EventQueue::getInstance()->send(Event::EVENT::LOAD);
 	}
+}
+
+void UIPool::add(UI *newUI)
+{
+	unsigned int uid = newUI->getUID();
+
+	UIs_.emplace(uid, newUI);
+	order_.push_front(uid);
+}
+
+void UIPool::remove(Uid uid)
+{
+	delete UIs_[uid];
+	UIs_[uid] = nullptr;
+
+	UIs_.erase(uid);
+
+	for (auto it = order_.cbegin(); it != order_.cend();)
+	{
+		if (*it == uid)
+		{
+			order_.erase(it);
+			break;
+		}
+		else it++;
+	}
+
+	UIPool::returnUID(uid);
+}
+
+void UIPool::prioritize(Uid uid)
+{
+	size_t idIndex = 0;
+
+	for (size_t i = 0; i < order_.size(); i++)
+	{
+		if (order_[i] == uid)
+		{
+			idIndex = i;
+			break;
+		}
+	}
+
+	for (size_t i = idIndex; i > 0; i--)
+		order_[i] = order_[i - 1];
+
+	order_[0] = uid;
+}
+
+void UIPool::flagCleanup()
+{
+	flagCleanup_ = true;
+}
+
+void UIPool::addTooltipped(Tooltipped *tooltipped)
+{
+	tooltipped_.emplace(tooltipped->getUId(), tooltipped);
+}
+
+void UIPool::removeTooltipped(Uid uid)
+{
+	if (activeTooltipped_ == uid)
+		isTooltipActive_ = false;
+
+	tooltipped_.erase(uid);
+	
+	UIPool::returnUID(uid);
 }
 
 void UIPool::toggleOverlay(OVERLAY_ID overlayId)
@@ -135,59 +232,7 @@ void UIPool::removeOverlay()
 	isOverlayOn_ = false;
 }
 
-void UIPool::flagCleanup()
-{
-	flagCleanup_ = true;
-}
-
-void UIPool::add(UI *newUI)
-{
-	unsigned int uID = newUI->getUID();
-
-	UIs_.emplace(uID, newUI);
-	order_.push_front(uID);
-}
-
-void UIPool::remove(unsigned int uID)
-{
-	delete UIs_[uID];
-	UIs_[uID] = nullptr;
-
-	UIs_.erase(uID);
-
-	for (auto it = order_.cbegin(); it != order_.cend();)
-	{
-		if (*it == uID)
-		{
-			order_.erase(it);
-			break;
-		}
-		else it++;
-	}	
-
-	UIPool::returnUID(uID);
-}
-
-void UIPool::prioritize(unsigned int uID)
-{
-	size_t idIndex = 0;
-
-	for (size_t i = 0; i < order_.size(); i++)
-	{
-		if (order_[i] == uID)
-		{
-			idIndex = i;
-			break;
-		}
-	}
-
-	for (size_t i = idIndex; i > 0; i--)
-		order_[i] = order_[i - 1];
-
-	order_[0] = uID;
-}
-
-unsigned int UIPool::getNewUID()
+UIPool::Uid UIPool::getNewUID()
 {
 	if (availableUIDs_.empty())
 		return nextUID_++;

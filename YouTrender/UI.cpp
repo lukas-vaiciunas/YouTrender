@@ -2,7 +2,8 @@
 #include "UIPool.h"
 #include <iostream>
 
-UI::UI() :
+UI::UI(const std::string &title) :
+	title_(title),
 	uID_(UIPool::getNewUID()),
 	isClosed_(false),
 	isMinimized_(false)
@@ -19,6 +20,11 @@ UI::~UI()
 void UI::maximize()
 {
 	isMinimized_ = false;
+}
+
+const std::string &UI::getTitle() const
+{
+	return title_;
 }
 
 unsigned int UI::getUID() const

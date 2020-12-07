@@ -3,7 +3,7 @@
 #include "FontData.h"
 
 Widget::Widget(float x, float y, const std::string &title) :
-	UI(),
+	UI(title),
 	x_(x),
 	y_(y),
 	width_(0),

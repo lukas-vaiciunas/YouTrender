@@ -5,13 +5,13 @@ class UI;
 #include <SFML/Graphics.hpp>
 #include <vector>
 #include "Collideable.h"
-#include "PrimitiveButton.h"
+#include "ButtonPrimitiveTooltipped.h"
 
 class Toolbar : public Collideable
 {
 private:
 	std::vector<UI *> items_;
-	std::vector<PrimitiveButton *> itemButtons_;
+	std::vector<ButtonPrimitiveTooltipped *> itemButtons_;
 	sf::RectangleShape bar_;
 	sf::RectangleShape outline_;
 

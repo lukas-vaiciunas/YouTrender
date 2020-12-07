@@ -58,7 +58,7 @@ void Toolbar::add(UI *item)
 	float dY = Collideable::aabb_.top;
 
 	items_.push_back(item);
-	itemButtons_.push_back(new PrimitiveButton(dX, dY, size, size, sf::Color(0, 255, 0, 255)));
+	itemButtons_.push_back(new ButtonPrimitiveTooltipped(dX, dY, size, size, sf::Color(0, 255, 0, 255), item->getTitle()));
 }
 
 void Toolbar::updateOnMousePress()
@@ -85,7 +85,7 @@ void Toolbar::render(sf::RenderWindow &window) const
 {
 	window.draw(bar_);
 
-	for (const PrimitiveButton *pb : itemButtons_)
+	for (const ButtonPrimitiveTooltipped *pb : itemButtons_)
 		pb->render(window);
 
 	window.draw(outline_);

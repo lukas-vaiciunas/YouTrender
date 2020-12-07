@@ -5,11 +5,12 @@
 class UI
 {
 protected:
+	std::string title_;
 	unsigned int uID_;
 	bool isClosed_;
 	bool isMinimized_;
 public:
-	UI();
+	UI(const std::string &title);
 	~UI();
 
 	virtual void updateOnMousePress() = 0;
@@ -20,6 +21,7 @@ public:
 
 	void maximize();
 
+	const std::string &getTitle() const;
 	unsigned int getUID() const;
 	bool isClosed() const;
 	bool isMinimized() const;

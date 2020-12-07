@@ -2,7 +2,7 @@
 
 #include "Collideable.h"
 
-class Button : public Collideable
+class Button : virtual public Collideable
 {
 protected:
 	sf::Sprite sprite_;

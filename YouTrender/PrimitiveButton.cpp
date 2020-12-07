@@ -2,7 +2,8 @@
 
 PrimitiveButton::PrimitiveButton(float x, float y, float width, float height, const sf::Color &color) :
 	tex_(),
-	Button(x, y, width, height, tex_.getTexture())
+	Button(x, y, width, height, tex_.getTexture()),
+	Collideable(x, y, width, height)
 {
 	tex_.create(static_cast<unsigned int>(width), static_cast<unsigned int>(height));
 	tex_.clear(color);
