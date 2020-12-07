@@ -101,15 +101,18 @@ void BarChart::updateOutput(const std::vector<std::pair<std::string, unsigned in
 		bars[i].setOutlineThickness(1.0f);
 
 		unusedColors_.pop();
-
+		
+		
 		amtTxts.push_back(sf::Text(std::to_string(data[i].second), FontData::getInstance()->getMainFont(), txtSize));
-		amtTxts[i].setOrigin(std::floorf(amtTxts[i].getLocalBounds().width / 2.0f), std::floorf(amtTxts[i].getLocalBounds().height / 2.0f));
+		const sf::FloatRect &amtTxtBounds = amtTxts[i].getLocalBounds();
+		amtTxts[i].setOrigin(std::floorf(amtTxtBounds.left + amtTxtBounds.width / 2.0f), std::floorf(amtTxtBounds.top + amtTxtBounds.height / 2.0f));
 		amtTxts[i].setPosition(std::floorf(dX + barWidth / 2.0f), std::floorf(dY - txtSize));
 		amtTxts[i].setFillColor(accentColor);
 	
 		std::string nextIndependentTxt = this->newlineify(data[i].first);
 		independentTxts.push_back(sf::Text(nextIndependentTxt, FontData::getInstance()->getMainFont(), txtSize));
-		independentTxts[i].setOrigin(std::floorf(independentTxts[i].getLocalBounds().width / 2.0f), std::floorf(independentTxts[i].getLocalBounds().height / 2.0f));
+		const sf::FloatRect &iTxtBounds = independentTxts[i].getLocalBounds();
+		independentTxts[i].setOrigin(std::floorf(iTxtBounds.left + iTxtBounds.width / 2.0f), std::floorf(iTxtBounds.top + iTxtBounds.height / 2.0f));
 		independentTxts[i].setPosition(std::floorf(dX + barWidth / 2.0f), std::floorf(dY + barHeight + minBarY / 2.0f));
 		independentTxts[i].setFillColor(accentColor);
 	}
@@ -121,7 +124,8 @@ void BarChart::updateOutput(const std::vector<std::pair<std::string, unsigned in
 		float dY = std::floorf((maxBarHeight + minBarY) - dependentSpacing * i);
 
 		dependentTxts.push_back(sf::Text(numMod.toShorthand(deltaDependent * i), FontData::getInstance()->getMainFont(), maxTxtSize));
-		dependentTxts[i].setOrigin(std::floorf(dependentTxts[i].getLocalBounds().width), std::floorf(maxTxtSize / 2.0f + 1.0f));
+		const sf::FloatRect &dTxtBounds = dependentTxts[i].getLocalBounds();
+		dependentTxts[i].setOrigin(std::floorf(dTxtBounds.left + dTxtBounds.width), std::floorf(dTxtBounds.top + dTxtBounds.height / 2.0f));
 		dependentTxts[i].setPosition(std::floorf(minBarX / 2.5f), dY);
 		dependentTxts[i].setFillColor(accentColor);
 
