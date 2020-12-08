@@ -12,7 +12,11 @@ Button::Button(float x, float y, float width, float height, const sf::Texture &t
 	Collideable(x, y, width, height),
 	sprite_(tex)
 {
+	float scaleX = width / tex.getSize().x;
+	float scaleY = height / tex.getSize().y;
+
 	sprite_.setPosition(x, y);
+	sprite_.setScale(scaleX, scaleY);
 }
 
 void Button::render(sf::RenderWindow &window) const

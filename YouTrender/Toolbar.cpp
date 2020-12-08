@@ -2,6 +2,8 @@
 #include "Constants.h"
 #include "Mouse.h"
 #include "UIPool.h"
+#include "TextureData.h"
+#include "TooltippedButton.h"
 
 Toolbar::Toolbar(float height) :
 	Collideable(
@@ -10,7 +12,7 @@ Toolbar::Toolbar(float height) :
 {
 	bar_.setPosition(Collideable::aabb_.left, Collideable::aabb_.top);
 	bar_.setSize(sf::Vector2f(Collideable::aabb_.width, Collideable::aabb_.height));
-	bar_.setFillColor(sf::Color(255, 255, 255, 255));
+	bar_.setFillColor(sf::Color(50, 110, 176, 255));
 
 	outline_.setPosition(bar_.getPosition());
 	outline_.setSize(sf::Vector2f(bar_.getLocalBounds().width, 1.0f));
@@ -58,7 +60,7 @@ void Toolbar::add(UI *item)
 	float dY = Collideable::aabb_.top;
 
 	items_.push_back(item);
-	itemButtons_.push_back(new ButtonPrimitiveTooltipped(dX, dY, size, size, sf::Color(0, 255, 0, 255), item->getTitle()));
+	itemButtons_.push_back(new TooltippedButton(dX, dY, size, size, TextureData::getInstance()->getTexture(23), item->getTitle()));
 }
 
 void Toolbar::updateOnMousePress()
@@ -85,7 +87,7 @@ void Toolbar::render(sf::RenderWindow &window) const
 {
 	window.draw(bar_);
 
-	for (const ButtonPrimitiveTooltipped *pb : itemButtons_)
+	for (const TooltippedButton *pb : itemButtons_)
 		pb->render(window);
 
 	window.draw(outline_);

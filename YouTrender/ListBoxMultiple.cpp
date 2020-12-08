@@ -1,24 +1,25 @@
 #include "ListBoxMultiple.h"
+#include "ChoiceButton.h"
 
 ListBoxMultiple::ListBoxMultiple
 (
 	float x, float y,
 	float buttonWidth, float buttonHeight,
-	float gapX, float gapY,
+	float gapX,
+	const std::vector<unsigned int> &buttonTexIds,
 	const std::vector<std::string> &optionsTxt,
-	const sf::Color &defaultColor,
-	const sf::Color &selectedColor,
-	ORIENTATION orientation
+	const sf::Color &textColor,
+	float textPosMod
 ) :
 	ListBox
 	(
 		x, y,
 		buttonWidth, buttonHeight,
-		gapX, gapY,
+		gapX,
+		buttonTexIds,
 		optionsTxt,
-		defaultColor,
-		selectedColor,
-		orientation
+		textColor,
+		textPosMod
 	)
 {}
 
@@ -27,15 +28,10 @@ void ListBoxMultiple::toggleSelection(size_t buttonIndex)
 	auto buttonIt = selected_.find(buttonIndex);
 
 	if (buttonIt != selected_.cend())
-	{
 		selected_.erase(buttonIt);
-		options_[buttonIndex]->setColor(defaultColor_);
-	}
-	else
-	{
-		selected_.emplace(buttonIndex);
-		options_[buttonIndex]->setColor(selectedColor_);
-	}
+	else selected_.emplace(buttonIndex);
+
+	choiceButtons_[buttonIndex]->toggle();
 }
 
 bool ListBoxMultiple::somethingSelected() const

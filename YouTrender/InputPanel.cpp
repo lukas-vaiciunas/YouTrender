@@ -19,17 +19,18 @@ InputPanel::InputPanel(
 	float x, float y,
 	const std::string &titleStr,
 	const std::vector<std::pair<std::string, std::vector<std::string>>> &options,
-	const sf::Color &defaultColor, const sf::Color &selectedColor) :
+	const std::vector<std::vector<unsigned int>> buttonTexIds,
+	unsigned int analyzeButtonTexId) :
 		Collideable(x, y, 0.0f, 0.0f),
 		Listener({ Event::EVENT::LOAD }),
 		title_(),
-		analyzeButton_(0.0f, 0.0f, 96.0f, 32.0f, "Analyze", 16U, defaultColor, sf::Color())
+		analyzeButton_(0.0f, 0.0f, 72.0f, 32.0f, analyzeButtonTexId, analyzeButtonTexId + 1, "Analyze", 12U, sf::Color(255, 255, 255, 255), 0.5f)
 {
 	constexpr float gapX = 16.0f;
 	constexpr float gapY = 32.0f;
 	constexpr float textOffset = gapY / 2.0f;
-	constexpr float buttonWidth = 96.0f;
-	constexpr float locationButtonWidth = buttonWidth / 2.0f;
+	constexpr float buttonWidth = 72.0f;
+	constexpr float locationButtonWidth = 49.0f;
 	constexpr float buttonHeight = 32.0f;
 	constexpr unsigned int textSize = 16U;
 
@@ -59,14 +60,14 @@ InputPanel::InputPanel(
 	for (auto it = listTitles_.begin(); it != listTitles_.end(); it++)
 		it->setPosition(startX - gapX, it->getPosition().y);
 
-	listBoxes_.push_back(new ListBoxMultiple(startX, startY, locationButtonWidth, buttonHeight, gapX, gapY, options[0].second, defaultColor, selectedColor, ListBox::ORIENTATION::HORIZONTAL));
+	listBoxes_.push_back(new ListBoxMultiple(startX, startY, locationButtonWidth, buttonHeight, gapX, buttonTexIds[0], options[0].second, sf::Color(0, 0, 0, 255), 0.25f));
 	float listBoxWidth = listBoxes_[0]->getAABB().width;
 	if (maxListWidth < listBoxWidth)
 		maxListWidth = listBoxWidth;
 
 	for (size_t i = 1; i < options.size(); i++)
 	{
-		listBoxes_.push_back(new ListBoxSingle(startX, startY + (buttonHeight + gapY) * i, buttonWidth, buttonHeight, gapX, gapY, options[i].second, defaultColor, selectedColor, ListBox::ORIENTATION::HORIZONTAL));
+		listBoxes_.push_back(new ListBoxSingle(startX, startY + (buttonHeight + gapY) * i, buttonWidth, buttonHeight, gapX, buttonTexIds[i], options[i].second, sf::Color(255, 255, 255, 255), 0.5f));
 
 		listBoxWidth = listBoxes_[i]->getAABB().width;
 		if (maxListWidth < listBoxWidth)

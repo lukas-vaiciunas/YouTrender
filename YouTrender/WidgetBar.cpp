@@ -9,9 +9,9 @@
 WidgetBar::WidgetBar(float x, float y, float width, const sf::String &title) :
 	dragbar_(x, y, width - Global::BAR_HEIGHT, Global::BAR_HEIGHT),
 	closeButton_(x + width - Global::BAR_HEIGHT, y, Global::BAR_HEIGHT, Global::BAR_HEIGHT,
-		TextureData::getInstance()->getTexture(0)),
-	minimizeButton_(x + width - Global::BAR_HEIGHT * 2.0f, y, Global::BAR_HEIGHT, Global::BAR_HEIGHT,
 		TextureData::getInstance()->getTexture(1)),
+	minimizeButton_(x + width - Global::BAR_HEIGHT * 2.0f, y, Global::BAR_HEIGHT, Global::BAR_HEIGHT,
+		TextureData::getInstance()->getTexture(2)),
 	title_(title, FontData::getInstance()->getMainFont(), 12U)
 	//isClosed_(false)
 {

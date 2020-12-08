@@ -10,6 +10,7 @@ PrimitiveButton::PrimitiveButton(float x, float y, float width, float height, co
 	tex_.display();
 
 	sprite_.setTexture(tex_.getTexture(), true);
+	sprite_.setScale(1.0f, 1.0f);
 }
 
 /*PrimitiveButton::PrimitiveButton(float x, float y, float width, float height, const std::string &text, unsigned int textSize, const sf::Color &color, const sf::Color &textColor) :

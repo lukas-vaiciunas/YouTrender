@@ -14,11 +14,11 @@ public:
 	(
 		float x, float y,
 		float buttonWidth, float buttonHeight,
-		float gapX, float gapY,
+		float gapX,
+		const std::vector<unsigned int> &buttonTexIds,
 		const std::vector<std::string> &optionsTxt,
-		const sf::Color &defaultColor,
-		const sf::Color &selectedColor,
-		ORIENTATION orientation
+		const sf::Color &textColor,
+		float textPosMod
 	);
 
 	bool somethingSelected() const override;

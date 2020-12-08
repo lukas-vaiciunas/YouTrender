@@ -146,6 +146,7 @@
     <ClCompile Include="Button.cpp" />
     <ClCompile Include="ButtonPrimitiveTextual.cpp" />
     <ClCompile Include="ButtonPrimitiveTooltipped.cpp" />
+    <ClCompile Include="ChoiceButton.cpp" />
     <ClCompile Include="Collideable.cpp" />
     <ClCompile Include="Constants.cpp" />
     <ClCompile Include="Dragbar.cpp" />
@@ -171,6 +172,7 @@
     <ClCompile Include="Toolbar.cpp" />
     <ClCompile Include="Tooltip.cpp" />
     <ClCompile Include="Tooltipped.cpp" />
+    <ClCompile Include="TooltippedButton.cpp" />
     <ClCompile Include="UI.cpp" />
     <ClCompile Include="UIPool.cpp" />
     <ClCompile Include="VideoData.cpp" />
@@ -183,6 +185,7 @@
     <ClInclude Include="Button.h" />
     <ClInclude Include="ButtonPrimitiveTextual.h" />
     <ClInclude Include="ButtonPrimitiveTooltipped.h" />
+    <ClInclude Include="ChoiceButton.h" />
     <ClInclude Include="Collideable.h" />
     <ClInclude Include="Constants.h" />
     <ClInclude Include="Conversion.h" />
@@ -211,6 +214,7 @@
     <ClInclude Include="Toolbar.h" />
     <ClInclude Include="Tooltip.h" />
     <ClInclude Include="Tooltipped.h" />
+    <ClInclude Include="TooltippedButton.h" />
     <ClInclude Include="UI.h" />
     <ClInclude Include="UIPool.h" />
     <ClInclude Include="VideoData.h" />

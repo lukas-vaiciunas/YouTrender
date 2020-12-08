@@ -3,6 +3,7 @@
 #include <unordered_set>
 #include <vector>
 #include <queue>
+#include "ChoiceButton.h"
 #include "ListBox.h"
 #include "Collideable.h"
 #include "Listener.h"
@@ -64,7 +65,7 @@ private:
 	sf::Text title_;
 	std::vector<sf::Text> listTitles_;
 	std::vector<ListBox *> listBoxes_;
-	ButtonPrimitiveTextual analyzeButton_;
+	ChoiceButton analyzeButton_;
 
 	void onEvent(Event::EVENT ev) override;
 	void loadData(ChoiceSet &choiceSet);
@@ -74,7 +75,8 @@ public:
 		float x, float y,
 		const std::string &titleStr,
 		const std::vector<std::pair<std::string, std::vector<std::string>>> &options,
-		const sf::Color &defaultColor, const sf::Color &selectedColor
+		const std::vector<std::vector<unsigned int>> buttonTexIds,
+		unsigned int analyzeButtonTexId
 	);
 
 	~InputPanel();

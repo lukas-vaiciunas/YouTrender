@@ -102,8 +102,8 @@ void BarChart::updateOutput(const std::vector<std::pair<std::string, unsigned in
 
 		unusedColors_.pop();
 		
-		
 		amtTxts.push_back(sf::Text(std::to_string(data[i].second), FontData::getInstance()->getMainFont(), txtSize));
+		
 		const sf::FloatRect &amtTxtBounds = amtTxts[i].getLocalBounds();
 		amtTxts[i].setOrigin(std::floorf(amtTxtBounds.left + amtTxtBounds.width / 2.0f), std::floorf(amtTxtBounds.top + amtTxtBounds.height / 2.0f));
 		amtTxts[i].setPosition(std::floorf(dX + barWidth / 2.0f), std::floorf(dY - txtSize));
@@ -111,6 +111,7 @@ void BarChart::updateOutput(const std::vector<std::pair<std::string, unsigned in
 	
 		std::string nextIndependentTxt = this->newlineify(data[i].first);
 		independentTxts.push_back(sf::Text(nextIndependentTxt, FontData::getInstance()->getMainFont(), txtSize));
+		
 		const sf::FloatRect &iTxtBounds = independentTxts[i].getLocalBounds();
 		independentTxts[i].setOrigin(std::floorf(iTxtBounds.left + iTxtBounds.width / 2.0f), std::floorf(iTxtBounds.top + iTxtBounds.height / 2.0f));
 		independentTxts[i].setPosition(std::floorf(dX + barWidth / 2.0f), std::floorf(dY + barHeight + minBarY / 2.0f));

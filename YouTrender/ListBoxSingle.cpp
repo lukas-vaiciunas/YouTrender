@@ -1,24 +1,25 @@
 #include "ListBoxSingle.h"
+#include "ChoiceButton.h"
 
 ListBoxSingle::ListBoxSingle
 (
 	float x, float y,
 	float buttonWidth, float buttonHeight,
-	float gapX, float gapY,
+	float gapX,
+	const std::vector<unsigned int> &buttonTexIds,
 	const std::vector<std::string> &optionsTxt,
-	const sf::Color &defaultColor,
-	const sf::Color &selectedColor,
-	ORIENTATION orientation
+	const sf::Color &textColor,
+	float textPosMod
 ) :
 	ListBox
 	(
 		x, y,
 		buttonWidth, buttonHeight,
-		gapX, gapY,
+		gapX,
+		buttonTexIds,
 		optionsTxt,
-		defaultColor,
-		selectedColor,
-		orientation
+		textColor,
+		textPosMod
 	),
 	selected_(-1)
 {}
@@ -26,14 +27,14 @@ ListBoxSingle::ListBoxSingle
 void ListBoxSingle::toggleSelection(size_t buttonIndex)
 {
 	if (selected_ != -1)
-		options_[selected_]->setColor(defaultColor_);
+		choiceButtons_[selected_]->toggle();
 
 	if (selected_ == buttonIndex)
 		selected_ = -1;
 	else
 	{
 		selected_ = buttonIndex;
-		options_[buttonIndex]->setColor(selectedColor_);
+		choiceButtons_[buttonIndex]->toggle();
 	}
 }
 

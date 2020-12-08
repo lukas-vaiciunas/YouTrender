@@ -72,9 +72,6 @@
     <ClCompile Include="IntroMovie.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ListBox.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="PrimitiveButton.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -82,12 +79,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ButtonPrimitiveTextual.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ListBoxMultiple.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ListBoxSingle.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Toolbar.cpp">
@@ -118,6 +109,21 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ButtonPrimitiveTooltipped.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ChoiceButton.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ListBox.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ListBoxMultiple.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ListBoxSingle.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TooltippedButton.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -179,9 +185,6 @@
     <ClInclude Include="IntroMovie.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ListBox.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="PrimitiveButton.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -195,12 +198,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="NumMod.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ListBoxMultiple.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ListBoxSingle.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Toolbar.h">
@@ -234,6 +231,21 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ButtonPrimitiveTooltipped.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ChoiceButton.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ListBox.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ListBoxMultiple.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ListBoxSingle.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TooltippedButton.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

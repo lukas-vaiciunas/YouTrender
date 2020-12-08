@@ -71,12 +71,12 @@ void Driver::switchState(STATE target)
 	case STATE::NONE:
 		break;
 	case STATE::INTRO_MOVIE:
-		introMovie_ = new IntroMovie(1.0f, 4, TextureData::getInstance()->getTexture(2));
+		introMovie_ = new IntroMovie(1.0f, 4, TextureData::getInstance()->getTexture(0));
 		break;
 	case STATE::MAIN:
 		loader_ = new Loader();
 		uiPool_ = new UIPool();
-		uiPool_->add(new Widget(Global::SCREEN_WIDTH * 3.0f / 4.0f, 0.0f,
+		uiPool_->add(new Widget(Global::SCREEN_WIDTH * 0.75f - 16.0f, 16.0f,
 			"Log",
 			Log::getInstance()));
 		inputPanel_ = new InputPanel(
@@ -124,8 +124,15 @@ void Driver::switchState(STATE target)
 					"BST"
 				})
 			},
-			sf::Color(255, 0, 0, 255),
-			sf::Color(0, 255, 0, 255));
+			{
+				{3, 5, 7, 9, 11, 13, 15, 17, 19, 21},
+				{24},
+				{24, 24, 24, 24},
+				{24, 24},
+				{24, 24}
+			},
+			26
+		);
 		break;
 	}
 }

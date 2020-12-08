@@ -1,17 +1,17 @@
 #pragma once
 
 class UI;
+class TooltippedButton;
 
 #include <SFML/Graphics.hpp>
 #include <vector>
 #include "Collideable.h"
-#include "ButtonPrimitiveTooltipped.h"
 
 class Toolbar : public Collideable
 {
 private:
 	std::vector<UI *> items_;
-	std::vector<ButtonPrimitiveTooltipped *> itemButtons_;
+	std::vector<TooltippedButton *> itemButtons_;
 	sf::RectangleShape bar_;
 	sf::RectangleShape outline_;
 

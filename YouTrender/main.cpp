@@ -45,7 +45,7 @@ int main(void)
 
 		driver.updateOnTick();
 
-		window.clear(sf::Color(66, 133, 244, 255));
+		window.clear(sf::Color(202, 223, 235, 255));
 		driver.render(window);
 		window.display();
 	}

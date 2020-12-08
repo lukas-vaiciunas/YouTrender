@@ -1,32 +1,32 @@
 #include "TextureData.h"
 #include "Constants.h"
+#include <fstream>
 
 TextureData *TextureData::instance_ = nullptr;
 
 TextureData::TextureData()
 {
-	sf::RenderTexture closeButton;
-	closeButton.create(static_cast<unsigned int>(Global::BAR_HEIGHT),
-		static_cast<unsigned int>(Global::BAR_HEIGHT));
-	closeButton.clear(sf::Color(255, 0, 0, 255));
-	closeButton.display();
+	sf::Texture tex;
+	std::ifstream inFile;
+	std::string id;
+	std::string filePath;
 
-	textures_.emplace(0, closeButton.getTexture());
+	inFile.open("loading/imgData.txt");
 
-	sf::RenderTexture minimizeButton;
-	minimizeButton.create(static_cast<unsigned int>(Global::BAR_HEIGHT),
-		static_cast<unsigned int>(Global::BAR_HEIGHT));
-	minimizeButton.clear(sf::Color(255, 255, 0, 255));
-	minimizeButton.display();
+	if (!inFile.is_open())
+		throw std::runtime_error("Failed to open imgData.txt for Texture loading in TextureData!");
 
-	textures_.emplace(1, minimizeButton.getTexture());
+	while (inFile.peek() != EOF)
+	{
+		inFile >> id;
+		inFile >> filePath;
 
-	sf::RenderTexture logo;
-	logo.create(Global::SCREEN_WIDTH / 2, Global::SCREEN_HEIGHT / 2);
-	logo.clear(sf::Color(255, 0, 0, 255));
-	logo.display();
+		tex.loadFromFile(filePath);
 
-	textures_.emplace(2, logo.getTexture());
+		textures_.emplace(std::stoul(id), tex);
+	}
+
+	inFile.close();
 }
 
 TextureData::~TextureData()
